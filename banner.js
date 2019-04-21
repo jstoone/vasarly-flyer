@@ -28,16 +28,18 @@ var Banner = function() {
 
     this.setupTiles = function () {
         var testColor = {color: '#a4ff4f'};
-        var colorStart = 0xa4ff4f;
-        var colorEnd = 0xfafff5;
-        var colorStep = Math.floor((colorEnd - colorStart) / (this.vars.size ** 2));
+        var colorStart = [0, 0, 0];
+        var colorEnd = [1, 1, 1];
+        var colorStep = (colorEnd[0] - colorStart[0]) / (this.vars.size ** 2);
         var currentIndex = 0;
 
         for (var y = 0; y < this.vars.size; y++) {
             for (var x = 0; x < this.vars.size; x++) {
                 var current = new PIXI.Graphics();
                 var colorDiff = colorStep * currentIndex;
-                current.beginFill(colorEnd - colorDiff);
+                var color = colorStart[0] + colorDiff;
+                color = PIXI.utils.rgb2hex([color, color, color]);
+                current.beginFill(color);
                 current.drawRect(0, 0, this.vars.size, this.vars.size);
                 current.endFill();
 
@@ -47,24 +49,5 @@ var Banner = function() {
                 currentIndex++;
             }
         }
-
-        console.log(
-            colorEnd - colorStart,
-            colorStep * (this.vars.size**2),
-            colorStep * currentIndex,
-        );
-
-        console.log(
-            new Number(colorStart).toString(16),
-            new Number(colorEnd).toString(16),
-            new Number(colorStart + (colorStep * currentIndex)).toString(16),
-            new Number(colorEnd - (colorStep * currentIndex)).toString(16),
-        );
-
-        console.log(
-            this.assets.tiles.children.length,
-            currentIndex,
-            this.vars.size ** 2
-        );
     }
 }
