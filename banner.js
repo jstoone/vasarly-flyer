@@ -16,7 +16,6 @@ var Banner = function() {
     }
 
     this.init = function() {
-        console.log(this.core);
         this.assets.tiles = new PIXI.Container();
 
         this.setupTiles();
@@ -29,17 +28,19 @@ var Banner = function() {
 
     this.setupTiles = function () {
         var currentIndex = 0;
-        var currentTile, currentFilter;
+        var currentTile;
+        var colors = Flyer.color.randomGoldenRatioHSL(2, 0.8, 0.4);
 
         for (var y = 0; y < this.tiles.count; y++) {
             for (var x = 0; x < this.tiles.count; x++) {
                 currentTile = new PIXI.Sprite(PIXI.Texture.WHITE);
-                //currentFilter = new PIXI.filters.ColorMatrixFilter();
+                currentColor = Flyer.color.blend(
+                    (currentIndex / Math.pow(this.tiles.count, 2)),
+                    colors[0],
+                    colors[1],
+                );
 
-                //currentTile.filters = [currentFilter];
-                //currentFilter.hue(180 * (currentIndex / Math.pow(this.tiles.count, 2)), true)
-                //currentFilter.browni(true);
-
+                currentTile.tint = currentColor;
                 currentTile.width = currentTile.height = this.tiles.size;
                 currentTile.position.set(x * this.tiles.size, y * this.tiles.size);
 
