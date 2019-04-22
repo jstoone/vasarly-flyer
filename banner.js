@@ -19,17 +19,35 @@ var Banner = function() {
         this.assets.tiles = new PIXI.Container();
 
         this.setupTiles();
+        this.blendTiles();
 
         this.stage.addChild(this.assets.tiles);
     }
 
     this.start = function() {
+        //if (parseInt(this.core.renderer.ticker.lastTime / 100) % 10 === 0) {
+    }
+
+    this.blendTiles = function() {
+        var tilesCount = this.tiles.count ** 2;
+        var passes = tilesCount * Flyer.random.get(0.2, true);
+        var blendPercent 
+        for (var t = 0; t < passes; t++) {
+            for (var i = 0; i < tilesCount; i++) {
+                var tile = this.assets.tiles.getChildAt(i);
+                var copyIndex = (i + this.tiles.count) % tilesCount;
+                var target = this.assets.tiles.getChildAt(copyIndex);
+                var blendPercent = Flyer.random.get(1, true);
+
+                tile.tint = Flyer.color.blend(blendPercent, tile.tint, target.tint);
+            }
+        }
     }
 
     this.setupTiles = function () {
         var currentIndex = 0;
         var currentTile;
-        var colors = Flyer.color.randomGoldenRatioHSL(2, 0.8, 0.4);
+        var colors = Flyer.color.randomGoldenRatioHSL(2, .7, 0.5);
 
         for (var y = 0; y < this.tiles.count; y++) {
             for (var x = 0; x < this.tiles.count; x++) {
