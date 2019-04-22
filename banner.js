@@ -11,7 +11,7 @@ var Banner = function() {
     }
 
     this.tiles = {
-        count: 25,
+        count: 26,
         size: 1000 / 25,
     }
 
@@ -25,13 +25,37 @@ var Banner = function() {
     }
 
     this.start = function() {
-        //if (parseInt(this.core.renderer.ticker.lastTime / 100) % 10 === 0) {
+        this.flipFlop();
+    }
+
+    this.flipFlop = function() {
+        anime({
+            targets: this.assets.tiles.children,
+            direction: 'alternate',
+            loop: true,
+            angle: [
+                {value: 90, easing: 'easeInOutQuad', duration: 250},
+                {value: 0, easing: 'easeOutQuad', duration: 1200, delay: 200}
+            ],
+            delay: anime.stagger(120, {grid: [26, 26], from: 'center'}),
+        });
+    }
+
+    this.render = function(delta) {
+        this.assets.tiles.children.forEach(function(tile) {
+            if (tile.y < -tile.height) {
+                tile.y += tile.height + this.config.height;
+            }
+
+            tile.y -= 0.3 * delta;
+        }.bind(this));
     }
 
     this.blendTiles = function() {
+        var blendPercent = null;
         var tilesCount = this.tiles.count ** 2;
         var passes = tilesCount * Flyer.random.get(0.2, true);
-        var blendPercent 
+
         for (var t = 0; t < passes; t++) {
             for (var i = 0; i < tilesCount; i++) {
                 var tile = this.assets.tiles.getChildAt(i);
@@ -47,7 +71,10 @@ var Banner = function() {
     this.setupTiles = function () {
         var currentIndex = 0;
         var currentTile;
-        var colors = Flyer.color.randomGoldenRatioHSL(2, .7, 0.5);
+        var colors = Flyer.color.randomGoldenRatioHSL(3, .7, 0.5);
+
+        this.assets.tiles.x += this.tiles.size / 2;
+        this.assets.tiles.y += this.tiles.size / 2;
 
         for (var y = 0; y < this.tiles.count; y++) {
             for (var x = 0; x < this.tiles.count; x++) {
@@ -61,6 +88,7 @@ var Banner = function() {
                 currentTile.tint = currentColor;
                 currentTile.width = currentTile.height = this.tiles.size;
                 currentTile.position.set(x * this.tiles.size, y * this.tiles.size);
+                currentTile.anchor.set(0.5);
 
                 this.assets.tiles.addChild(currentTile);
                 currentIndex++;
