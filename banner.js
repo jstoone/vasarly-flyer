@@ -10,12 +10,13 @@ var Banner = function() {
         height: 1000,
     }
 
-    this.vars = {
+    this.tiles = {
         count: 25,
         size: 1000 / 25,
     }
 
     this.init = function() {
+        console.log(this.core);
         this.assets.tiles = new PIXI.Container();
 
         this.setupTiles();
@@ -27,25 +28,22 @@ var Banner = function() {
     }
 
     this.setupTiles = function () {
-        var testColor = {color: '#a4ff4f'};
-        var colorStart = [0, 0, 0];
-        var colorEnd = [1, 1, 1];
-        var colorStep = (colorEnd[0] - colorStart[0]) / (this.vars.size ** 2);
         var currentIndex = 0;
+        var currentTile, currentFilter;
 
-        for (var y = 0; y < this.vars.size; y++) {
-            for (var x = 0; x < this.vars.size; x++) {
-                var current = new PIXI.Graphics();
-                var colorDiff = colorStep * currentIndex;
-                var color = colorStart[0] + colorDiff;
-                color = PIXI.utils.rgb2hex([color, color, color]);
-                current.beginFill(color);
-                current.drawRect(0, 0, this.vars.size, this.vars.size);
-                current.endFill();
+        for (var y = 0; y < this.tiles.count; y++) {
+            for (var x = 0; x < this.tiles.count; x++) {
+                currentTile = new PIXI.Sprite(PIXI.Texture.WHITE);
+                //currentFilter = new PIXI.filters.ColorMatrixFilter();
 
-                current.position.set(x * this.vars.size, y * this.vars.size);
+                //currentTile.filters = [currentFilter];
+                //currentFilter.hue(180 * (currentIndex / Math.pow(this.tiles.count, 2)), true)
+                //currentFilter.browni(true);
 
-                this.assets.tiles.addChild(current);
+                currentTile.width = currentTile.height = this.tiles.size;
+                currentTile.position.set(x * this.tiles.size, y * this.tiles.size);
+
+                this.assets.tiles.addChild(currentTile);
                 currentIndex++;
             }
         }
