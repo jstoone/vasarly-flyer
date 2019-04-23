@@ -29,15 +29,34 @@ var Banner = function() {
     }
 
     this.flipFlop = function() {
-        anime({
+        var blendColor = this.assets.tiles.fadeColor;
+        var animation = anime({
             targets: this.assets.tiles.children,
             direction: 'alternate',
-            loop: true,
-            angle: [
-                {value: 90, easing: 'easeInOutQuad', duration: 250},
-                {value: 0, easing: 'easeOutQuad', duration: 1200, delay: 200}
+            complete: function() {
+                setTimeout(this.flipFlop.bind(this), 1500);
+            }.bind(this),
+            tint: [
+                {
+                    value: function(tile, i) {
+                        return Flyer.color.blend(0.3, tile.tint, blendColor);
+                    },
+                    duration: 0.1,
+                },
+                {
+                    value: function(tile, i) {
+                        return Flyer.color.blend(0.5, tile.tint, blendColor);
+                    },
+                    duration: 0.1,
+                    delay: 1500,
+                    endDelay: 1000,
+                },
             ],
-            delay: anime.stagger(120, {grid: [26, 26], from: 'center'}),
+            delay: anime.stagger(100, {
+                from: 'center',
+                grid: [26, 26],
+                easing: 'easeInOutSine',
+            }),
         });
     }
 
@@ -63,7 +82,7 @@ var Banner = function() {
                 var target = this.assets.tiles.getChildAt(copyIndex);
                 var blendPercent = Flyer.random.get(1, true);
 
-                tile.tint = Flyer.color.blend(blendPercent, tile.tint, target.tint);
+                tile.tint = tile.origTint = Flyer.color.blend(blendPercent, tile.tint, target.tint);
             }
         }
     }
@@ -71,8 +90,9 @@ var Banner = function() {
     this.setupTiles = function () {
         var currentIndex = 0;
         var currentTile;
-        var colors = Flyer.color.randomGoldenRatioHSL(3, .7, 0.5);
+        var colors = Flyer.color.randomGoldenRatioHSL(2, .7, 0.5);
 
+        this.assets.tiles.fadeColor = Flyer.color.random(colors[1], colors[0]);
         this.assets.tiles.x += this.tiles.size / 2;
         this.assets.tiles.y += this.tiles.size / 2;
 
