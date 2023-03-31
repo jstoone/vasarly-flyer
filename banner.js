@@ -6,7 +6,7 @@
  */
 var Banner = function() {
     this.config = {
-        width: 1000,
+        width: 2000,
         height: 1000,
     }
 
@@ -87,7 +87,7 @@ var Banner = function() {
         }
     }
 
-    this.setupTiles = function () {
+    this.setupTiles = function() {
         var currentIndex = 0;
         var currentTile;
         var colors = Flyer.color.randomGoldenRatioHSL(2, .7, 0.5);
